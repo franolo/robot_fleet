@@ -1,0 +1,1191 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <world name="custom_room">
+
+    <!-- PHYSICS -->
+    <physics name="real_time_physics" type="dart">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.81</gravity>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics">
+      <engine>dart</engine>
+    </plugin>
+    <plugin filename="gz-sim-synchronize-system" name="gz::sim::systems::Synchronize">
+      <use_sim_time>true</use_sim_time>
+    </plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+      <update_rate>1000</update_rate>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <!-- LIGHTS -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 -0.5 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+
+    <light type="point" name="ceiling_light">
+      <pose>0 0 5 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>30</range>
+        <constant>0.3</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <cast_shadows>true</cast_shadows>
+    </light>
+
+    <!-- GROUND -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>20 20</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>20 20</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- WALLS (odbicie Y -> -Y) -->
+    <model name="wall_left">
+      <static>true</static>
+      <link name="link">
+        <pose>-5.89 0.4 1.25 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.1 4.8 2.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.1 4.8 2.5</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_right">
+      <static>true</static>
+      <link name="link">
+        <pose>5.89 0.4 1.25 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.1 4.8 2.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.1 4.8 2.5</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_bottom">
+      <static>true</static>
+      <link name="link">
+        <pose>0 2.8 1.25 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>11.78 0.1 2.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>11.78 0.1 2.5</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_top">
+      <static>true</static>
+      <link name="link">
+        <pose>0 -2.0 1.25 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>11.78 0.1 2.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>11.78 0.1 2.5</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <!-- SINK (zlew) – odbity w osi X (Y -> -Y) -->
+    <model name="sink">
+      <static>true</static>
+      <pose>-5.05 -1.7 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>1.10 0.50 0.8</size></box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>1.10 0.50 0.8</size></box>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    
+
+    <!-- TABLE -->
+    <model name="table1_real">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>2.685 -1.56 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>1.76 0.88 0.03</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>1.76 0.88 0.03</size></box></geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>3.535 -1.15 0.5 0 0 0</pose> <!-- +0.85, +0.41 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>3.535 -1.97 0.5 0 0 0</pose> <!-- +0.85, -0.41 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>1.835 -1.15 0.5 0 0 0</pose> <!-- -0.85, +0.41 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>1.835 -1.97 0.5 0 0 0</pose> <!-- -0.85, -0.41 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+</model>
+
+
+    
+    <model name="table2_real">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>3.865 -1.385 1.015 0 0 0</pose>
+    <collision name="collision"><geometry><box><size>0.60 1.23 0.03</size></box></geometry></collision>
+    <visual name="visual">
+      <geometry><box><size>0.60 1.23 0.03</size></box></geometry>
+      <material><ambient>0.6 0.4 0.2 1</ambient><diffuse>0.6 0.4 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>4.135 -0.800 0.5 0 0 0</pose> <!-- +0.27, +0.585 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>4.135 -1.970 0.5 0 0 0</pose> <!-- +0.27, -0.585 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>3.595 -0.800 0.5 0 0 0</pose> <!-- -0.27, +0.585 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>3.595 -1.970 0.5 0 0 0</pose> <!-- -0.27, -0.585 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+</model>
+
+
+    <model name="table3_real">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>4.565 -1.225 1.015 0 0 0</pose>
+    <collision name="collision"><geometry><box><size>0.80 1.55 0.03</size></box></geometry></collision>
+    <visual name="visual">
+      <geometry><box><size>0.80 1.55 0.03</size></box></geometry>
+      <material><ambient>0.6 0.4 0.2 1</ambient><diffuse>0.6 0.4 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>4.935 -0.480 0.5 0 0 0</pose> <!-- +0.37, +0.745 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>4.935 -1.970 0.5 0 0 0</pose> <!-- +0.37, -0.745 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>4.195 -0.480 0.5 0 0 0</pose> <!-- -0.37, +0.745 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>4.195 -1.970 0.5 0 0 0</pose> <!-- -0.37, -0.745 -->
+    <collision name="collision"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></collision>
+    <visual name="visual"><geometry><box><size>0.06 0.06 1.0</size></box></geometry></visual>
+  </link>
+
+</model>
+
+
+    
+    <!-- BOXES -->
+    <model name="box1">
+      <static>true</static>
+      <pose> -0.415 -1.145 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.39 0.15 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.39 0.15 0.5</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box2">
+      <static>true</static>
+      <pose> 0.255 -1.16 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.34 0.12 0.45</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.34 0.12 0.45</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box3">
+      <static>true</static>
+      <pose> 1.085 -1.17 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.46 0.1 0.45</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.46 0.1 0.45</size></box></geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    
+
+    <model name="box4">
+  <static>true</static>
+  <pose>-5.74 -1.15 0.225 0 0 -1.57</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box><size>1.7 0.3 0.45</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.7 0.3 0.45</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.9 1</ambient>
+        <diffuse>0.2 0.2 0.9 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+<!--
+<model name="box5">
+  <static>true</static>
+  <pose>-5.49 0.5 0.225 0 0 -1.57</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.45</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.7 0.8 0.45</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.9 1</ambient>
+        <diffuse>0.2 0.2 0.9 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+-->
+
+<model name="box6">
+  <static>true</static>
+  <pose>2.2 -0.08 0.225 0 0 -1.57</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box><size>0.58 0.09 0.45</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.58 0.09 0.45</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.9 1</ambient>
+        <diffuse>0.2 0.2 0.9 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+
+<model name="box7">
+  <static>true</static>
+  <pose>-1.345 1.235 0.225 0 0 -1.57</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box><size>0.41 0.15 0.45</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.41 0.15 0.45</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.9 1</ambient>
+        <diffuse>0.2 0.2 0.9 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+
+<model name="box8">
+  <static>true</static>
+  <pose>-0.1675 1.005 0.225 0 0 -1.57</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box><size>0.23 0.485 0.45</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.23 0.485 0.45</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.9 1</ambient>
+        <diffuse>0.2 0.2 0.9 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+
+<model name="box9">
+  <static>true</static>
+  <pose>0.78 1.005 0.225 0 0 -1.57</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box><size>0.23 0.38 0.45</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.23 0.38 0.45</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.9 1</ambient>
+        <diffuse>0.2 0.2 0.9 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+
+<model name="table_rotated">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <!-- blat jest obrócony o 90° wokół Z -->
+    <pose>-5.49 0.5 1.015 0 0 1.57</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+
+  <!-- FL -->
+  <link name="leg_fl">
+    <pose>-5.83 1.24 0.5 0 0 1.57</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- FR -->
+  <link name="leg_fr">
+    <pose>-5.15 1.24 0.5 0 0 1.57</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- BL -->
+  <link name="leg_bl">
+    <pose>-5.83 -0.24 0.5 0 0 1.57</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- BR -->
+  <link name="leg_br">
+    <pose>-5.15 -0.24 0.5 0 0 1.57</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+</model>
+
+<model name="table_oriented_like_first_shifted">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>-5.09 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+
+  <!-- Front Left -->
+  <link name="leg_fl">
+    <pose>-4.35 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- Front Right -->
+  <link name="leg_fr">
+    <pose>-4.35 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- Back Left -->
+  <link name="leg_bl">
+    <pose>-5.83 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- Back Right -->
+  <link name="leg_br">
+    <pose>-5.83 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+</model>
+
+<model name="table_oriented_like_first_shifted2">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>-3.49 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+
+  <!-- Front Left -->
+  <link name="leg_fl">
+    <pose>-2.75 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- Front Right -->
+  <link name="leg_fr">
+    <pose>-2.75 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- Back Left -->
+  <link name="leg_bl">
+    <pose>-4.23 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <!-- Back Right -->
+  <link name="leg_br">
+    <pose>-4.23 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+</model>
+
+
+<model name="table_1">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>-1.89 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>-1.15 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>-1.15 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>-2.63 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>-2.63 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+</model>
+
+<model name="table_2">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>-0.29 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>0.45 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>0.45 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>-1.03 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>-1.03 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+</model>
+
+<model name="table_3">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>1.31 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>2.05 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>2.05 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>0.57 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>0.57 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+</model>
+
+<model name="table_4">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <pose>2.91 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+  <link name="leg_fl">
+    <pose>3.65 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_fr">
+    <pose>3.65 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_bl">
+    <pose>2.17 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <link name="leg_br">
+    <pose>2.17 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>0.06 0.06 1.0</size></box>
+      </geometry>
+      <material>
+        <ambient>0.2 0.2 0.2 1</ambient>
+        <diffuse>0.2 0.2 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+</model>
+
+<model name="table_5">
+  <static>true</static>
+
+  <!-- BLAT -->
+  <link name="top">
+    <!-- 2.91 + 1.6 = 4.51 -->
+    <pose>4.51 2.4 1.015 0 0 0</pose>
+    <collision name="collision">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+    </collision>
+    <visual name="visual">
+      <geometry>
+        <box><size>1.6 0.8 0.03</size></box>
+      </geometry>
+      <material>
+        <ambient>0.6 0.4 0.2 1</ambient>
+        <diffuse>0.6 0.4 0.2 1</diffuse>
+      </material>
+    </visual>
+  </link>
+
+  <!-- NOGI -->
+
+  <link name="leg_fl">
+    <!-- 3.65 + 1.6 = 5.25 -->
+    <pose>5.25 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <link name="leg_fr">
+    <!-- 3.65 + 1.6 = 5.25 -->
+    <pose>5.25 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <link name="leg_bl">
+    <!-- 2.17 + 1.6 = 3.77 -->
+    <pose>3.77 2.74 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+  <link name="leg_br">
+    <!-- 2.17 + 1.6 = 3.77 -->
+    <pose>3.77 2.06 0.5 0 0 0</pose>
+    <collision name="collision">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+    </collision>
+    <visual name="visual">
+      <geometry><box><size>0.06 0.06 1.0</size></box></geometry>
+      <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+    </visual>
+  </link>
+
+</model>
+
+
+  
+
+
+
+    <!-- GUI -->
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 -7 7 0.7 0 1.57</pose>
+      </camera>
+    </gui>
+
+  </world>
+</sdf>

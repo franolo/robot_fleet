@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"> 
+  <xacro:macro name="project_gazebo" params="robot_name is_ignition">
+
+
+    <!-- Wheel properties -->
+    <gazebo reference="$(arg robot_name)_wheel_right_link">
+      <mu1>100000000000000.0</mu1>
+      <mu2>100000000000000.0</mu2>
+      <kp>1000000000000.0</kp>
+      <kd>10.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+      <fdirl>1 0 0</fdirl>
+    </gazebo>
+
+    <gazebo reference="$(arg robot_name)_wheel_left_link">
+      <mu1>100000000000000.0</mu1>
+      <mu2>100000000000000.0</mu2>
+      <kp>1000000000000.0</kp>
+      <kd>10.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+      <fdirl>1 0 0</fdirl>
+    </gazebo>
+
+    <!-- Caster properties -->
+    <gazebo reference="$(arg robot_name)_caster_front_link">
+      <mu1>0.1</mu1>
+      <mu2>0.1</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+    </gazebo>
+
+    <gazebo reference="$(arg robot_name)_caster_rear_link">
+      <mu1>0.1</mu1>
+      <mu2>0.1</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+    </gazebo>
+
+    <!-- Control plugins -->
+    <gazebo>
+      <xacro:if value="$(arg is_ignition)">
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+  <ros>
+    <namespace>$(arg robot_name)</namespace>
+  </ros>
+  <robot_namespace>$(arg robot_name)</robot_namespace>
+  <parameters>$(find project_controller)/config/project_controllers.yaml</parameters>
+</plugin>
+        <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu">
+        </plugin>
+        <plugin name="gazebo_ros" filename="libgazebo_ros_init.so"></plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <robot_namespace>$(arg robot_name)</robot_namespace>
+          <parameters>$(find project_controller)/config/project_controllers.yaml</parameters>
+        </plugin>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        </plugin>
+        <plugin name="gazebo_ros" filename="libgazebo_ros_init.so"></plugin>
+      </xacro:unless>
+    </gazebo>
+
+    <!-- IMU sensor -->
+    <gazebo reference="$(arg robot_name)_imu_link">
+      <sensor name="imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <gz_frame_id>$(arg robot_name)_imu_link</gz_frame_id>
+        <topic>$(arg robot_name)/imu</topic>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

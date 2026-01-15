@@ -1,0 +1,35 @@
+robot1:
+  controller_manager:
+    ros__parameters:
+      update_rate: 100
+      use_sim_time: true
+
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      simple_velocity_controller_robot1:
+        type: velocity_controllers/JointGroupVelocityController
+
+  simple_velocity_controller_robot1:
+    ros__parameters:
+      joints:
+        - robot1_wheel_left_joint
+        - robot1_wheel_right_joint
+
+robot2:
+  controller_manager:
+    ros__parameters:
+      update_rate: 100
+      use_sim_time: true
+
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      simple_velocity_controller_robot2:
+        type: velocity_controllers/JointGroupVelocityController
+
+  simple_velocity_controller_robot2:
+    ros__parameters:
+      joints:
+        - robot2_wheel_left_joint
+        - robot2_wheel_right_joint

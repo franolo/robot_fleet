@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot name="project" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="robot_name" default="robot1"/>
+  <xacro:arg name="is_ignition" default="true"/>
+
+  <ros2_control name="RobotSystem" type="system">
+    <xacro:if value="$(arg is_ignition)">
+      <hardware>
+        <plugin>ign_ros2_control/IgnitionSystem</plugin>
+        <parameters>
+          <param name="robot_name">$(arg robot_name)</param>
+        </parameters>
+      </hardware>
+    </xacro:if>
+
+    <xacro:unless value="$(arg is_ignition)">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        <parameters>
+          <param name="robot_name">$(arg robot_name)</param>
+        </parameters>
+      </hardware>
+    </xacro:unless>
+    
+    <joint name="$(arg robot_name)_wheel_right_joint">
+      <command_interface name="velocity">
+         <param name="min">-1</param>   
+         <param name="max">1</param>   
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="$(arg robot_name)_wheel_left_joint">
+      <command_interface name="velocity">
+         <param name="min">-1</param>   
+         <param name="max">1</param>   
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+  </ros2_control>
+</robot>

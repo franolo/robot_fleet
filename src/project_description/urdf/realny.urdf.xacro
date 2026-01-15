@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+
+<robot name="project" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+    <!-- Include files with arguments -->
+    <!-- Wczytanie pliku z definicją makra -->
+    <xacro:include filename="$(find project_description)/urdf/project_gazebo.xacro"/>
+
+    <xacro:include filename="$(find project_description)/urdf/project_ros2_control.xacro"/>
+  
+    <xacro:include filename="$(find project_description)/urdf/realsense_camera.xacro"/>
+    <xacro:include filename="$(find project_description)/urdf/lidar.xacro"/>
+
+    <xacro:arg name="robot_name" default="robot1"/>
+    <xacro:arg name="is_ignition" default="true"/>
+
+    <!--Bazowy footprint-->
+    <link name="$(arg robot_name)_base_footprint"/>
+
+    <!--Główny link bazowy-->
+    <link name="$(arg robot_name)_base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://project_description/meshes/robot_MTracker/body.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="gray">
+                <color rgba="0.3 0.3 0.3 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://project_description/meshes/robot_MTracker/body.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="$(arg robot_name)_base_joint" type="fixed">
+        <parent link="$(arg robot_name)_base_footprint"/>
+        <child link="$(arg robot_name)_base_link"/>
+        <origin xyz="0 0 0.005" rpy="0 0 0"/>
+    </joint>
+
+    <!--Lewe koło-->
+    <link name="$(arg robot_name)_wheel_left_link">
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="0.0203184713" />
+        <inertia
+          ixx="3.46e-06"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="6.34e-06"
+          iyz="0.0"
+          izz="3.46e-06"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://project_description/meshes/robot_MTracker/lewe_kolo.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="black">
+                <color rgba="0.0 0.0 0.0 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.57 0 0" />
+            <geometry>
+                <cylinder radius="0.025" length="0.013"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name ="$(arg robot_name)_wheel_left_joint" type="continuous">
+        <origin xyz="0 0.0725 0.02" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_wheel_left_link"/>
+    </joint>
+
+    <!--Prawe koło-->
+    <link name="$(arg robot_name)_wheel_right_link">
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="0.0203184713" />
+          <inertia
+          ixx="3.46e-06"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="6.34e-06"
+          iyz="0.0"
+          izz="3.46e-06"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://project_description/meshes/robot_MTracker/lewe_kolo.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="black">
+                <color rgba="0.0 0.0 0.0 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.57 0 0" />
+            <geometry>
+                <cylinder radius="0.025" length="0.013"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name ="$(arg robot_name)_wheel_right_joint" type="continuous">
+        <origin xyz="0 -0.0725 0.02" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <parent link="$(arg robot_name)_base_link"/>
+        <child link="$(arg robot_name)_wheel_right_link"/>
+    </joint>
+
+    <!-- caster -->
+     <link name="$(arg robot_name)_caster_front_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://project_description/meshes/robot_MTracker/real_caster_front.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.005" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="$(arg robot_name)_caster_front_joint" type="fixed">
+    <origin xyz="0.06 0 -0.005" rpy="0 0 0" />
+    <parent link="$(arg robot_name)_base_link" />
+    <child link="$(arg robot_name)_caster_front_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+  
+  <link name="$(arg robot_name)_caster_rear_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://project_description/meshes/robot_MTracker/real_caster_rear.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.005" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="$(arg robot_name)_caster_rear_joint" type="fixed">
+    <origin xyz="-0.06 0 -0.005" rpy="0 0 0" />
+    <parent link="$(arg robot_name)_base_link" />
+    <child link="$(arg robot_name)_caster_rear_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- IMU -->
+  <link name="$(arg robot_name)_imu_link">
+    <inertial>
+      <origin xyz="-0.00552433659106688 0.000168210391520346 0.000514000497342681" rpy="0 0 0" />
+      <mass value="0.000528415362211671" />
+      <inertia ixx="1.46176048428261E-08" ixy="1.40015117949421E-10" ixz="-1.99633872937403E-12"
+               iyy="8.59662482954888E-09" iyz="7.52375112767959E-12"
+               izz="2.30279421279312E-08" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://project_description/meshes/imu_link.STL" />
+      </geometry>
+      <material name="imu_material">
+        <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://project_description/meshes/imu_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="$(arg robot_name)_imu_joint" type="fixed">
+    <origin xyz="0 0 0.0698986241758014" rpy="0 0 0" />
+    <parent link="$(arg robot_name)_base_link" />
+    <child link="$(arg robot_name)_imu_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- Sensors -->
+    <xacro:rgbd_camera
+    prefix="$(arg robot_name)_camera_"
+    camera_name="camera"
+    parent="$(arg robot_name)_base_link"
+    mesh_file="file://$(find project_description)/meshes/d435.stl"
+    xyz_offset="0.088 0 0.05"
+    rpy_offset="0 -0.50 0"
+  />
+
+  <xacro:lidar_sensor
+    prefix="$(arg robot_name)_lidar_"
+    parent="$(arg robot_name)_base_link"
+    topic_name="$(arg robot_name)/scan"
+    mesh_file="package://project_description/meshes/rplidar_s2.stl"
+    xyz_offset="0 0 0.195"
+    rpy_offset="0 0 0"
+  />
+
+      <xacro:project_gazebo robot_name="$(arg robot_name)" is_ignition="$(arg is_ignition)"/>
+</robot>
