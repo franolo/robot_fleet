@@ -111,11 +111,23 @@ ros2 run project_master master.py
 
 ## References
 
-1. **tf2** – ROS 2 transform library
-2. **URDF** – Unified Robot Description Format
-3. **Nav2** – Navigation stack for ROS 2
-4. **Gazebo** – 3D simulation environment
-5. **Probabilistic Robotics** (Thrun et al.) – Foundation for localization algorithms
+[1] S. Thrun, W. Burgard, and D. Fox, *Probabilistic Robotics*. MIT Press, 2005.
+
+[2] T. Mańkowski, "mtracker: ROS packages for the mTracker mobile robot," GitHub repository, 2024. [Online]. Available: https://github.com/tysik/mtracker
+
+[3] Wikipedia contributors, "List of moments of inertia," Wikipedia, The Free Encyclopedia, 2026. [Online]. Available: https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+
+[4] Automatic Addison, "Yahboom Rosmaster LiDAR URDF," GitHub repository, 2021. [Online]. Available: https://github.com/automaticaddison/yahboom_rosmaster/blob/main/yahboom_rosmaster_description/urdf/sensors/lidar.urdf.xacro
+
+[5] Open Robotics, "tf2 — ROS 2 Documentation (Foxy)," 2024. [Online]. Available: https://docs.ros.org/en/foxy/Tutorials/Intermediate/Tf2/Tf2-Main.html
+
+[6] ROS Wiki, "Unified Robot Description Format (URDF)," 2026. [Online]. Available: https://wiki.ros.org/urdf
+
+[7] R. M. Sobański, M. M. Michałek, and M. Defoort, "Predefined-time VFO control design for unicycle-like mobile robots," *Nonlinear Dynamics*, vol. 112, no. 8, pp. 6389–6408, 2024. doi: 10.1007/s11071-024-09355-w
+
+[8] M. M. Michałek, M. Kiełczewski, and T. Jedwabny, "Cascaded VFO control for non-standard N-trailer robots," *Journal of Intelligent & Robotic Systems*, vol. 77, pp. 415–432, 2015. doi: 10.1007/s10846-013-9981-z
+
+[9] A. Brandi, "Self-Driving and ROS 2: Learn by Doing - Odometry & Control," GitHub repository. [Online]. Available: https://github.com/AntoBrandi/Self-Driving-and-ROS-2-Learn-by-Doing-Odometry-Control
 
 ---
 
