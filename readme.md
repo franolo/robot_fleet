@@ -55,7 +55,7 @@ colcon build
 ### 2. Source the setup file in each new terminal
 
 ```bash
-source install/setup.bash
+. install/setup.bash
 ```
 
 ### 3. Launch the simulation world
@@ -73,7 +73,7 @@ ros2 launch project_controller navigation_custom_launch.py \
   params_file:=./src/project_controller/config/nav2_params.yaml
 ```
 
-### 5. Launch navigation
+### 5. Launch navigation for robot 2
 
 ```bash
 ros2 launch project_controller navigation_custom_launch.py \
