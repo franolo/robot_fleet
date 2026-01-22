@@ -206,7 +206,7 @@ class PathHandler:
     
 # astar:
     def astar(self, start_x, start_y, start_theta, goal_x, goal_y):
-        iteration_limit = 10000
+        iteration_limit = 20000
         iterations = 0
         open_set = []
         closed_set= set()
